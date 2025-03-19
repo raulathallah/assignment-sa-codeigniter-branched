@@ -46,6 +46,11 @@ class CreateStudentsTable extends Migration
                 'type'          => 'VARCHAR',
                 'constraint'    => '255'
             ],
+            'diploma_path' => [
+                'type'          => 'VARCHAR',
+                'constraint'    => '255',
+                'default'           => null,
+            ],
             'created_at'        => [
                 'type'           => 'DATETIME',
                 'null'           => false,

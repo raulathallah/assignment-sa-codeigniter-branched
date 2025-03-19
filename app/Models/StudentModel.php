@@ -23,6 +23,7 @@ class StudentModel extends Model
         'current_semester',
         'academic_status',
         'entry_year',
+        'diploma_path',
         'gpa',
     ];
 

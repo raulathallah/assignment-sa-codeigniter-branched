@@ -114,13 +114,8 @@ class Enrollment extends BaseController
 
         if ($email->send()) {
             //return redirect()->to('/')->with('success', 'Email berhasil dikirim');
-
             $data = new EntitiesEnrollment($this->request->getPost());
-
             $course = $this->modelCourse->find($this->request->getPost('course_id'));
-
-
-
             $data->id = null;
             $data->status = 'active';
 

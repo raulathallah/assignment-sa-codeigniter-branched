@@ -2,10 +2,23 @@
 
 namespace App\Controllers;
 
+use App\Models\StudentModel;
 use CodeIgniter\Files\File;
+use CodeIgniter\I18n\Time;
 
 class Home extends BaseController
 {
+
+    private $modelStudent;
+    private $db;
+    public function __construct()
+    {
+        $this->db = db_connect();
+        $this->db->initialize();
+
+        $this->modelStudent = new StudentModel();
+    }
+
     public function index(): string
     {
         //dd(user());
@@ -83,7 +96,6 @@ class Home extends BaseController
     }
 
     public function upload()
-
     {
         $userfile = $this->request->getFile('userfile');
 
@@ -160,39 +172,46 @@ class Home extends BaseController
             }
         }
 
-
-
-        $newName = $userfile->getRandomName();
+        //$newName = $userfile->getRandomName();
 
         //$userfile->move(WRITEPATH . 'uploads', $newName);
         //$filepath = WRITEPATH . 'uploads/original' . $newName;
-        $image = service('image');
+        //$image = service('image');
+        // $image->withFile($userfile)
+        //     ->fit(100, 100, 'center')
+        //     ->save(WRITEPATH . 'uploads/thumbnail/' . 'thumbnail_' . $newName);
+        // $image->withFile($userfile)
+        //     ->resize(300, 300, true, 'height')
+        //     ->text(
+        //         'Copyright 2020 My Photo Co',
+        //         [
+        //             'color'     => '#fff',
+        //             'opacity'   => 0.5,
+        //             'withShadow'   => true,
+        //             'hAlign'    => 'center',
+        //             'vAlign'    => 'botton',
+        //             'fontSize'  => 20,
+        //         ]
+        //     )
+        //     ->save(WRITEPATH . 'uploads/watermark/' .  'wm_' . $newName);
+        $studentData = $this->modelStudent->where('user_id', user_id())->first();
+
+        $nowTime = new Time();
+        $dateString = $nowTime->toDateString();
+        $timeString = $nowTime->toTimeString();
+        $dateStringWithoutSpecialChar = str_replace("-", "", $dateString);
+        $timeStringWithoutSpecialChar = str_replace(":", "", $timeString);
+
+        $fileName = $studentData->student_id . '_' . $dateStringWithoutSpecialChar . '_' . $timeStringWithoutSpecialChar .  '.pdf';
+
+        $userfile->move(WRITEPATH . 'uploads/original', $fileName);
+        $filepath = WRITEPATH . 'uploads' . DIRECTORY_SEPARATOR . 'original' . DIRECTORY_SEPARATOR . $fileName;
 
 
-
-        $image->withFile($userfile)
-            ->fit(100, 100, 'center')
-
-            ->save(WRITEPATH . 'uploads/thumbnail/' . 'thumbnail_' . $newName);
-
-        $image->withFile($userfile)
-            ->resize(300, 300, true, 'height')
-            ->text(
-                'Copyright 2020 My Photo Co',
-                [
-                    'color'     => '#fff',
-                    'opacity'   => 0.5,
-                    'withShadow'   => true,
-                    'hAlign'    => 'center',
-                    'vAlign'    => 'botton',
-                    'fontSize'  => 20,
-                ]
-            )
-            ->save(WRITEPATH . 'uploads/watermark/' .  'wm_' . $newName);
-
-
-        $userfile->move(WRITEPATH . 'uploads/original', 'original_' . $newName);
-        $filepath = WRITEPATH . 'uploads/original/' . $newName;
+        if (user_id()) {
+            $studentData->diploma_path = $fileName;
+            $this->modelStudent->save($studentData);
+        }
 
         $data = ['uploaded_fileinfo' => new File($filepath)];
 
@@ -225,5 +244,17 @@ class Home extends BaseController
         }
 
         return true; // Allowed
+    }
+
+    public function downloadPdf($filename)
+    {
+        // Define the path using WRITEPATH and check for the file
+        $filePath = WRITEPATH . 'uploads/original/' . $filename;
+
+        if (file_exists($filePath)) {
+            return $this->response->download($filePath, null);
+        } else {
+            throw new \CodeIgniter\Exceptions\PageNotFoundException('File not found');
+        }
     }
 }

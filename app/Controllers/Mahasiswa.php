@@ -95,13 +95,10 @@ class Mahasiswa extends BaseController
 
     public function detail($id): string
     {
-
-
         //$studentsObject = $this->mhs_model->getStudentByNIM($nim);
         //$students = $studentsObject->toArray();
         $parser = \Config\Services::parser();
         $student = $this->modelStudent->find($id);
-
         $gradesTable = $this->db->table('student_grades');
         $gradesTable
             ->select('*')
@@ -109,18 +106,13 @@ class Mahasiswa extends BaseController
             ->join('courses', 'enrollments.course_id = courses.id')
             ->where('enrollments.student_id', $id);
         $grades = $gradesTable->get()->getResult('array');
-
-
         $studentArray = $student->toArray();
-
-
         // $students_grades = $db
         //     ->query('SELECT * FROM courses 
         //         JOIN enrollments ON enrollments.course_id = courses.id 
         //         JOIN student_grades ON enrollments.id = student_grades.enrollment_id
         //     ')
         //     ->getResult('array');
-
 
         $studentArray['academic_status_cell'] = view_cell('AcademicStatusCell', ['status' => $student->academic_status]);
         //, DAY, 'cache_academic_status'
@@ -159,7 +151,14 @@ class Mahasiswa extends BaseController
         $studentArray['title_profile'] = 'My Profile';
 
         $data['content'] = $parser->setData($studentArray)->render('components/student_profile');
+        $data['diploma_path'] = $studentArray['diploma_path'];
         return view('students/v_mahasiswa_detail', $data);
+    }
+
+    public function uploadDiploma()
+    {
+
+        return view('students/v_mahasiswa_upload');
     }
 
     public function create(): string

@@ -10,6 +10,8 @@
 
 </ul>
 
-<p><?= anchor('upload', 'Upload Another File!') ?></p>
+<!-- <p><?= anchor('upload', 'Upload Another File!') ?></p> -->
+
+<a href="/my-profile">Back to profile</a>
 
 <?= $this->endSection(); ?>

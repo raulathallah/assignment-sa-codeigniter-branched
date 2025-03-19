@@ -25,8 +25,15 @@ $routes->group('', ['namespace' => 'App\Controllers'], function ($routes) {
     $routes->post('login', 'Auth::attemptLogin');
 });
 
+$routes->group('', ['namespace' => 'App\Controllers'], function ($routes) {
+    $routes->get('download/(:segment)', [Home::class, 'downloadPdf']);
+    //$routes->get('view/(:segment)', [Home::class, 'downloadPdf']);
+});
+
+
 $routes->group('', ['filter' => 'role:student'], function ($routes) {
     $routes->get('my-profile', [Mahasiswa::class, 'detailProfile']);
+    $routes->get('student/upload-diploma', [Mahasiswa::class, 'uploadDiploma']);
 });
 
 $routes->group('enrollments', ['filter' => 'role:student'], function ($routes) {
