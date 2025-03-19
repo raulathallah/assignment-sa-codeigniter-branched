@@ -45,9 +45,9 @@ Enrollments
                 <?php endforeach; ?>
               </select>
             </div>
-
           </div>
         <?php endif; ?>
+
         <div class="col">
           <div class="form-element mb-3">
             <label

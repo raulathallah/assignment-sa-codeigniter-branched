@@ -43,27 +43,24 @@
             <h1>Pesan untuk Anda</h1>
         </div>
         <div class="content">
-            <h2>Halo, <?= $name ?></h2>
-            <p><?= $content ?></p>
+            <h2>Halo, <?= $studentFullName ?> (<?= $studentId ?>)</h2>
             <p>Terima kasih telah membaca email ini.</p>
+            <hr>
             <div class="card mb-4">
                 <div class="card-header">
                     <strong>Course Information</strong>
                 </div>
-                <div class="card-body">
-                    <ul class="list-unstyled">
-                        <?php foreach ($features as $feature): ?>
-                            <li><?= $feature ?></li>
-                        <?php endforeach; ?>
-                    </ul>
-                </div>
+                <h5 class="fw-bold">Course Code: <?= $courseCode; ?></h5>
+                <h5 class="fw-bold">Course Name: <?= $courseName; ?></h5>
+                <h5 class="fw-bold">Course Credits: <?= $courseCredits; ?></h5>
+                <h5 class="fw-bold">Enrolled At: <?= $date; ?></h5>
+            </div>
+            <hr>
+            <div class="footer">
+                <p>Email ini dikirim otomatis. Mohon jangan membalas email ini.</p>
+                <p>&copy; <?= date('Y') ?> Nama Perusahaan Anda</p>
             </div>
         </div>
-        <div class="footer">
-            <p>Email ini dikirim otomatis. Mohon jangan membalas email ini.</p>
-            <p>&copy; <?= date('Y') ?> Nama Perusahaan Anda</p>
-        </div>
-    </div>
 
 </body>
 

@@ -11,12 +11,14 @@ use App\Models\EnrollmentModel;
 use App\Models\StudentModel;
 use CodeIgniter\HTTP\ResponseInterface;
 use CodeIgniter\I18n\Time;
+use Myth\Auth\Models\UserModel;
 
 class Enrollment extends BaseController
 {
     private $modelEnrollment;
     private $modelCourse;
     private $modelStudent;
+    private $modelUser;
     protected $db;
 
     public function __construct()
@@ -27,6 +29,8 @@ class Enrollment extends BaseController
         $this->modelEnrollment = new EnrollmentModel();
         $this->modelCourse = new CourseModel();
         $this->modelStudent = new StudentModel();
+
+        $this->modelUser = new UserModel();
     }
 
     public function index()
@@ -47,7 +51,8 @@ class Enrollment extends BaseController
             'total' => $result['total'],
             'params' => $params,
             'baseUrl' => in_groups('admin') ? base_url('admin/enrollments') : base_url('enrollments'),
-            'type' => in_groups('admin') == 1 ? 'admin' : ''
+            'type' => in_groups('admin') == 1 ? 'admin' : '',
+            'addHref' => in_groups('admin') ? '/admin/enrollments/create' : '/enrollments/create'
         ];
 
         return view('enrollments/v_enrollments', $data);
@@ -77,9 +82,20 @@ class Enrollment extends BaseController
         $userToEmail = user()->email;
 
         $courseData = $this->modelCourse->find($this->request->getPost('course_id'));
-        $studentData = $this->modelStudent->where('user_id', user_id())->first();
 
-        dd($studentData);
+        $studentData = null;
+        if ($this->request->getPost('student_id')) {
+            $studentData = $this->modelStudent->find($this->request->getPost('student_id'));
+        } else {
+            $studentData = $this->modelStudent->where('user_id', user_id())->first();
+        }
+
+        if (in_groups('admin')) {
+            $userToEmail = $this->modelUser->find($studentData->user_id)->email;
+        }
+
+        $time = new Time();
+
         $email = service('email');
         $email->setTo($userToEmail);
         $email->setSubject('Course enrollments');
@@ -87,10 +103,11 @@ class Enrollment extends BaseController
             'title' => 'Course Enrollment Information',
             'name' => user()->username,
             'studentId' => $studentData->student_id,
+            'studentFullName' => $studentData->name,
             'courseCode' => $courseData->code,
             'courseName' => $courseData->name,
             'courseCredits' => $courseData->credits,
-            'date' => new Time()
+            'date' => $time->format('Y-m-d H:i:s')
         ];
         $message = view('email', $data); // Isi konten email
         $email->setMessage($message);
@@ -102,8 +119,14 @@ class Enrollment extends BaseController
 
             $course = $this->modelCourse->find($this->request->getPost('course_id'));
 
+
+
             $data->id = null;
             $data->status = 'active';
+
+            if ($studentData) {
+                $data->student_id = $studentData->id;
+            }
             $data->semester = $course->semester;
 
             $store = $this->modelEnrollment->save($data);
@@ -114,7 +137,12 @@ class Enrollment extends BaseController
             }
 
             session()->setFlashdata('success', 'Enrollments berhasil disimpan');
-            return redirect()->to('admin/enrollments');
+
+
+            if (in_groups('admin')) {
+                return redirect()->to('admin/enrollments');
+            }
+            return redirect()->to('/enrollments');
         } else {
 
             $data = ['error' => $email->printDebugger()];

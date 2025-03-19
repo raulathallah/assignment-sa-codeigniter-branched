@@ -10,9 +10,7 @@ Enrollments
     List Enrollments
   </div>
   <div class="card-body">
-    <?php if ($type == 'admin'): ?>
-      <a href="/admin/enrollments/create"><button class="btn btn-primary mb-2"><i class="bi bi-plus"></i>Add Enrollments</button></a>
-    <?php endif; ?>
+    <a href="<?= $addHref; ?>"><button class="btn btn-primary mb-2"><i class="bi bi-plus"></i>Add Enrollments</button></a>
 
     <form action="<?= $baseUrl ?>" method="get" class="form-inline">
       <div class="row mb-4">
