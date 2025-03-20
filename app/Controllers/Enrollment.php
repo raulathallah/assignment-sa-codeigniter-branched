@@ -112,36 +112,36 @@ class Enrollment extends BaseController
         $message = view('email', $data); // Isi konten email
         $email->setMessage($message);
 
+        //return redirect()->to('/')->with('success', 'Email berhasil dikirim');
+        $data = new EntitiesEnrollment($this->request->getPost());
+        $course = $this->modelCourse->find($this->request->getPost('course_id'));
+        $data->id = null;
+        $data->status = 'active';
+
+        if ($studentData) {
+            $data->student_id = $studentData->id;
+        }
+        $data->semester = $course->semester;
+
+        $store = $this->modelEnrollment->save($data);
+        if (!$store) {
+            // Output any error (like if save failed)
+            dd($this->modelEnrollment->errors());
+        }
+
         if ($email->send()) {
-            //return redirect()->to('/')->with('success', 'Email berhasil dikirim');
-            $data = new EntitiesEnrollment($this->request->getPost());
-            $course = $this->modelCourse->find($this->request->getPost('course_id'));
-            $data->id = null;
-            $data->status = 'active';
-
-            if ($studentData) {
-                $data->student_id = $studentData->id;
-            }
-            $data->semester = $course->semester;
-
-            $store = $this->modelEnrollment->save($data);
-
-            if (!$store) {
-                // Output any error (like if save failed)
-                dd($this->modelEnrollment->errors());
-            }
-
             session()->setFlashdata('success', 'Enrollments berhasil disimpan');
-
 
             if (in_groups('admin')) {
                 return redirect()->to('admin/enrollments');
             }
+
             return redirect()->to('/enrollments');
         } else {
 
             $data = ['error' => $email->printDebugger()];
 
+            $this->modelEnrollment->delete($this->modelEnrollment->getInsertID());
             return view('email_form', $data);
         }
     }

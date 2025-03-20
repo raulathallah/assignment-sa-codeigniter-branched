@@ -55,8 +55,8 @@ Upload Diploma
     var fileTypeError = document.getElementById('file-type-error');
     var fileSizeError = document.getElementById('file-size-error');
     var pdfPreviewContainer = document.getElementById('pdf-preview-container');
-    //var maxSize = 5 * 1024 * 1024; //5mb in binary terms
-    var maxSize = 5; //5mb in binary terms
+    var maxSize = 5 * 1024 * 1024; //5mb in binary terms
+    //var maxSize = 5; //5mb in binary terms
     //var allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
 
     var allowedExtensions = ['.pdf'];

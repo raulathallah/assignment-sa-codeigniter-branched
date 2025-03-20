@@ -208,7 +208,6 @@ class Home extends BaseController
         $userfile->move(WRITEPATH . 'uploads/original', $fileName);
         $filepath = WRITEPATH . 'uploads' . DIRECTORY_SEPARATOR . 'original' . DIRECTORY_SEPARATOR . $fileName;
 
-
         if (user_id()) {
             $studentData->diploma_path = $fileName;
             $this->modelStudent->save($studentData);
