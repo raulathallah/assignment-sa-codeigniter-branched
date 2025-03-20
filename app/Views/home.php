@@ -17,7 +17,7 @@ Home
     <p>Welcome, <?= user()->username; ?>!</p>
 
     <?php if (!empty(user()->getRoles())): ?>
-        <span>Roles</span>
+        <span>Role(s)</span>
         <ul>
             <?php foreach (user()->getRoles() as $role): ?>
                 <li><span class="fw-bold"><?= $role ?></span></li>
