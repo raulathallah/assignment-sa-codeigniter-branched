@@ -101,7 +101,7 @@ class Home extends BaseController
 
         if (!$userfile->isValid()) {
 
-            return view('home', [
+            return view('students/v_mahasiswa_upload', [
 
                 'error' => $userfile->getErrorString()
 
@@ -130,7 +130,7 @@ class Home extends BaseController
         if ($this->isAllowedFileTypeDocument($userfile)) {
             if (!$this->validate($validationRulesDocument)) {
 
-                return view('home', [
+                return view('students/v_mahasiswa_upload', [
 
                     'errors' => $this->validator->getErrors()
 

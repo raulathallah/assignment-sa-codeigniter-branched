@@ -61,7 +61,7 @@
                 <p>&copy; <?= date('Y') ?> Nama Perusahaan Anda</p>
             </div>
         </div>
-
+    </div>
 </body>
 
 </html>

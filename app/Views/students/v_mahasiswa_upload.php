@@ -5,20 +5,20 @@ Upload Diploma
 <?= $this->endSection() ?>
 
 <?= $this->section('content') ?>
-<?php if (session('errors')) : ?>
-  <div class="alert alert-danger">
-    <ul>
-      <?php foreach (session('errors') as $error) : ?>
-        <li><?= $error ?></li>
-      <?php endforeach ?>
-    </ul>
-  </div>
-<?php endif ?>
+
 <div class="card">
   <div class="card-header fs-4">
     Upload Diploma
   </div>
   <div class="card-body">
+
+    <div class="my-2">
+      <?php if ($errors): ?>
+        <?php foreach ($errors as $error): ?>
+          <span style="color: red;"><?= esc($error) ?></span>
+        <?php endforeach ?>
+      <?php endif; ?>
+    </div>
 
     <?= form_open_multipart('upload/upload', ['id' => 'upload-form', 'class' =>
     'pristine-validate']) ?>
