@@ -113,7 +113,8 @@ class Home extends BaseController
                 'label' => 'Dokumen',
                 'rules' => [
                     'uploaded[userfile]',
-                    'mime_in[userfile,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document]',
+                    //'mime_in[userfile,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document]',
+                    'mime_in[userfile,application/pdf]',
                     'max_size[userfile,5120]', // 5MB dalam KB (5 * 1024)
                 ],
                 'errors' => [

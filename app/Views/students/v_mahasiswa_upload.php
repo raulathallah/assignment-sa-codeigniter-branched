@@ -55,8 +55,8 @@ Upload Diploma
     var fileTypeError = document.getElementById('file-type-error');
     var fileSizeError = document.getElementById('file-size-error');
     var pdfPreviewContainer = document.getElementById('pdf-preview-container');
-    var maxSize = 5 * 1024 * 1024;
-
+    //var maxSize = 5 * 1024 * 1024; //5mb in binary terms
+    var maxSize = 5; //5mb in binary terms
     //var allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
 
     var allowedExtensions = ['.pdf'];
@@ -79,12 +79,18 @@ Upload Diploma
       });
 
       if (!validExtension) {
-        fileTypeError.style.display = 'block'; // Show error if not PDF
+        fileTypeError.style.display = 'block';
+        fileTypeError.style.color = 'red';
+        fileTypeError.style.fontSize = '12px';
+        fileTypeError.style.fontWeight = 'bold';
         return false;
       }
 
       if (file.size > maxSize) {
-        fileSizeError.style.display = 'block'; // Show error if file is too large
+        fileSizeError.style.display = 'block';
+        fileSizeError.style.color = 'red';
+        fileSizeError.style.fontSize = '12px';
+        fileSizeError.style.fontWeight = 'bold';
         return false;
       }
 
@@ -105,7 +111,7 @@ Upload Diploma
 
       return true;
 
-    }, "Validasi file gagal", 5, false);
+    }, "Invalid file.", 5, false);
 
 
     form.addEventListener('submit', function(e) {

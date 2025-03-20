@@ -38,6 +38,16 @@
             /* Adjust the main content's left margin to avoid sidebar overlap */
             flex-grow: 1;
         }
+
+        .pristine-error {
+            color: red;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        /* input.is-invalid {
+            border-color: red;
+        } */
     </style>
 
 </head>
