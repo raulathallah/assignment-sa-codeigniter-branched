@@ -35,73 +35,6 @@ class Enrollment extends BaseController
         $this->modelStudent = new StudentModel();
 
         $this->modelUser = new UserModel();
-
-
-        $this->enrollmentsData = [
-
-            (object)[
-                'id' => 1,
-                'student_id' => '181001',
-                'name' => 'Agus Setiawan',
-
-                'study_program' => 'Teknik Informatika',
-                'current_semester' => 5,
-
-                'course_code' => 'IF4101',
-                'course_name' => 'Pemrograman Web',
-                'credits' => 3,
-
-                'course_semester' => 4,
-                'academic_year' => '2023/2024',
-
-                'enrollment_semester' => 'Ganjil',
-                'status' => 'Aktif'
-
-            ],
-
-            (object)[
-
-                'id' => 2,
-                'student_id' => '181001',
-                'name' => 'Agus Setiawan',
-
-                'study_program' => 'Teknik Informatika',
-                'current_semester' => 5,
-
-                'course_code' => 'IF4102',
-                'course_name' => 'Basis Data Lanjut',
-                'credits' => 3,
-
-                'course_semester' => 4,
-                'academic_year' => '2023/2024',
-
-                'enrollment_semester' => 'Ganjil',
-                'status' => 'Aktif'
-
-            ],
-
-            (object)[
-
-                'id' => 3,
-                'student_id' => '182002',
-                'name' => 'Budi Santoso',
-
-                'study_program' => 'Sistem Informasi',
-                'current_semester' => 4,
-
-                'course_code' => 'SI3201',
-                'course_name' => 'Analisis Sistem Informasi',
-
-                'credits' => 4,
-                'course_semester' => 3,
-                'academic_year' => '2023/2024',
-
-                'enrollment_semester' => 'Ganjil',
-                'status' => 'Aktif'
-
-            ],
-
-        ];
     }
 
     public function index()
@@ -152,11 +85,42 @@ class Enrollment extends BaseController
         return $result->findAll();
     }
 
+    public function enrollmentForm()
+
+    {
+
+        $student_id = $this->request->getVar('student_id');
+
+        $name = $this->request->getVar('name');
+
+        $filteredData = $this->filterData($student_id, $name);
+
+        $data = [
+
+            'title' => 'Laporan Enrollment Mata Kuliah',
+
+            'enrollments' => $filteredData,
+
+            'filters' => [
+
+                'student_id' => $student_id,
+
+                'name' => $name
+
+            ]
+
+        ];
+
+        return view('report/enrollments', $data);
+    }
+
     public function enrollmentExcel()
     {
-        //$student_id = $this->request->getVar('student_id');
-        $student_id = '2301893244';
+        $student_id = $this->request->getVar('student_id');
+        //$student_id = '2301893244';
         $name = $this->request->getVar('name');
+
+        dd($this->request->getVar());
         //$enrollments = $this->filterData($student_id, $name);
         $enrollments = $this->filterData($student_id, $name);
 

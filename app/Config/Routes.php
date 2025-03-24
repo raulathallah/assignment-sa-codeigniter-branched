@@ -11,12 +11,13 @@ use CodeIgniter\Router\RouteCollection;
  * @var RouteCollection $routes
  */
 $routes->get('/', [Home::class, 'index']);
-$routes->get('report/enrollmentExcel', [Enrollment::class, 'enrollmentExcel']);
+
 
 $routes->get('email', [Home::class, 'sendEmail']);
 $routes->post('upload/upload', [Home::class, 'upload']);
 
 $routes->get('academic-statistic', [Academic::class, 'getAcademicStatistic']);
+
 
 $routes->group('', ['namespace' => 'App\Controllers'], function ($routes) {
     $routes->get('register', 'Auth::register', ['as' => 'register']);
@@ -49,6 +50,13 @@ $routes->group('admin/enrollments', ['filter' => 'role:admin'], function ($route
     $routes->post('store', 'Enrollment::store');
     $routes->get('delete/(:num)', 'Enrollment::delete/$1');
 });
+
+//reporting
+$routes->group('admin/reports', ['filter' => 'role:admin'], function ($routes) {
+    $routes->get('enrollments', [Enrollment::class, 'enrollmentForm']);
+});
+$routes->get('report/enrollmentExcel', [Enrollment::class, 'enrollmentExcel']);
+$routes->post('report/studentsbyprogram', [Mahasiswa::class, 'studentsbyprogramPdf']);
 
 $routes->group('admin/users', ['filter' => 'role:admin'], function ($routes) {
     $routes->get('/', 'Users::index');

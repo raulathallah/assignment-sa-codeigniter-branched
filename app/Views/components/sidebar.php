@@ -22,6 +22,10 @@
           <a class="fs-6 btn btn-link text-white text-decoration-none text-start w-100" href="/admin/enrollments">
             <i class="me-2 bi bi-archive-fill"></i></i>Enrollments</a>
         </li>
+        <li class="">
+          <a class="fs-6 btn btn-link text-white text-decoration-none text-start w-100" href="/admin/reports/enrollments">
+            <i class="me-2 bi bi-file-earmark-bar-graph"></i>Enrollments Report</a>
+        </li>
       <?php endif; ?>
 
 
@@ -31,6 +35,7 @@
             <i class="me-2 bi bi-book-half">
             </i>Course</a>
         </li>
+
         <li class="">
           <a class="fs-6 btn btn-link text-white text-decoration-none text-start w-100" href="/academic-statistic">
             <i class="me-2 bi bi-bar-chart-fill">
