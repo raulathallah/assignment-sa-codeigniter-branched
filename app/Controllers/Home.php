@@ -2,6 +2,8 @@
 
 namespace App\Controllers;
 
+use App\Models\CourseModel;
+use App\Models\StudentGradeModel;
 use App\Models\StudentModel;
 use CodeIgniter\Files\File;
 use CodeIgniter\I18n\Time;
@@ -10,6 +12,10 @@ class Home extends BaseController
 {
 
     private $modelStudent;
+    private $modelGrades;
+    private $modelCourse;
+
+    private $creditRequiredPerSemester;
     private $db;
     public function __construct()
     {
@@ -17,17 +23,38 @@ class Home extends BaseController
         $this->db->initialize();
 
         $this->modelStudent = new StudentModel();
+        $this->modelGrades = new StudentGradeModel();
+        $this->modelCourse = new CourseModel();
+
+        $this->creditRequiredPerSemester = [
+            ['semester' => 1, 'credits_required' => 20],
+            ['semester' => 2, 'credits_required' => 20],
+            ['semester' => 3, 'credits_required' => 20],
+            ['semester' => 4, 'credits_required' => 20],
+            ['semester' => 5, 'credits_required' => 20],
+            ['semester' => 6, 'credits_required' => 18],
+            ['semester' => 7, 'credits_required' => 14],
+            ['semester' => 8, 'credits_required' => 12],
+        ];
     }
 
     public function index(): string
     {
-        //dd(user());
         return view('home');
     }
 
     public function dashboardStudent()
     {
-        return view('dashboard/student');
+        $creditsByGrade = $this->getCreditsByGrade();
+        $creditComparison = $this->getCreditComparison();
+        $gpaData = $this->getGpaPerSemester();
+
+        return view('dashboard/student', [
+            'creditsByGrade' => json_encode($creditsByGrade),
+            'creditComparison' => json_encode($creditComparison),
+            'gpaData' => json_encode($gpaData),
+
+        ]);
     }
 
     public function dashboardAdmin()
@@ -256,5 +283,224 @@ class Home extends BaseController
         } else {
             throw new \CodeIgniter\Exceptions\PageNotFoundException('File not found');
         }
+    }
+
+    private function getCreditsByGrade()
+    {
+        $getGradeCredits = $this->modelGrades->select('student_grades.grade_letter, student_grades.grade_value as credits')
+            ->join('enrollments', 'student_grades.enrollment_id = enrollments.id')
+            ->join('students', 'enrollments.student_id = students.id')
+            ->where('students.user_id', user_id())
+            ->findAll();
+
+        $gradeCredits = [];
+
+        foreach ($getGradeCredits as $row) {
+            array_push($gradeCredits, ['grade_letter' => $row->grade_letter, 'credits' => $row->credits]);
+        }
+
+        // $dummyGradeCredits = [
+        //     ['grade_letter' => 'A', 'credits' => 45],
+        //     ['grade_letter' => 'B+', 'credits' => 20],
+        //     ['grade_letter' => 'B', 'credits' => 32],
+        //     ['grade_letter' => 'C', 'credits' => 8],
+        //     ['grade_letter' => 'C', 'credits' => 18],
+        //     ['grade_letter' => 'D', 'credits' => 6]
+        // ];
+
+        $backgroundColors = [
+            'A' => 'rgb(54, 162, 235)', // Biru untuk A
+            'B+' => 'rgb(75, 192, 192)', // Cyan untuk B+
+            'B' => 'rgb(153, 102, 255)', // Ungu untuk B
+            'C+' => 'rgb(255, 205, 86)', // Kuning untuk C+
+            'C' => 'rgb(255, 159, 64)', // Oranye untuk C
+            'D' => 'rgb(255, 99, 132)' // Merah untuk D
+        ];
+
+        foreach ($gradeCredits as $row) {
+
+            $gradeLabels[] = $row['grade_letter'] . ' = ' . $row['credits'] . ' Credits';
+
+            $creditCounts[] = (int)$row['credits'];
+
+            $colors[] = $backgroundColors[$row['grade_letter']];
+        }
+
+        return [
+
+            'labels' => $gradeLabels,
+            'datasets' => [
+                [
+                    'label' => 'Credits by Grade',
+                    'data' => $creditCounts,
+                    'backgroundColor' => $colors,
+                    'hoverOffset' => 4
+                ]
+
+            ]
+
+        ];
+    }
+
+    private function getCreditComparison()
+    {
+        $getCreditTaken = $this->modelCourse
+            ->select('sum(courses.credits) as credits, enrollments.semester, students.id')
+            ->join('enrollments', 'enrollments.course_id = courses.id')
+            ->join('students', 'enrollments.student_id = students.id')
+            ->where('students.user_id', user_id())
+            ->groupBy('enrollments.semester, students.id')
+            ->findAll();
+
+        $creditTaken = [];
+
+        foreach ($getCreditTaken as $row) {
+            array_push($creditTaken, [
+                'credits_taken' => $row->credits,
+                'semester' => $row->semester,
+                //'id' => $row->id,
+                'credits_required' => $this->getCreditBySemester($row->semester, $this->creditRequiredPerSemester)
+            ]);
+        };
+
+        // $creditTaken = array_reduce($creditTakenArray, function ($acc, $curr) {
+        //     $id = $curr['id'];
+        //     // If the id does not exist in the accumulator, initialize it
+        //     if (!isset($acc[$id])) {
+        //         $acc[$id] = ['id' => $id, 'semester' => $curr['semester'], 'credits_taken' => 0];
+        //     }
+
+        //     // Sum the price
+        //     $acc[$id]['credits_taken'] += $curr['credits'];
+
+        //     return $acc;
+        // }, []);
+
+        // Convert the grouped array to a plain array of values
+        //$creditTaken = array_values($creditTaken);
+
+        // $dummyCredits = [
+        //     ['semester' => 1, 'credits_taken' => 20, 'credits_required' => 20],
+        //     ['semester' => 2, 'credits_taken' => 19, 'credits_required' => 22],
+        //     ['semester' => 3, 'credits_taken' => 22, 'credits_required' => 24],
+        //     ['semester' => 4, 'credits_taken' => 20, 'credits_required' => 22],
+        //     ['semester' => 5, 'credits_taken' => 18, 'credits_required' => 20],
+        //     ['semester' => 6, 'credits_taken' => 16, 'credits_required' => 18]
+        // ];
+
+        foreach ($creditTaken as $row) {
+            $labels[] = 'Semester ' . $row['semester'];
+            $creditsTaken[] = (int)$row['credits_taken'];
+            $creditsRequired[] = (int)$row['credits_required'];
+        }
+
+        return [
+            'labels' => $labels,
+            'datasets' => [
+
+                [
+
+                    'label' => 'Credits Taken',
+
+                    'data' => $creditsTaken,
+
+                    'backgroundColor' => 'rgba(54, 162, 235, 0.5)',
+
+                    'borderColor' => 'rgb(54, 162, 235)',
+
+                    'borderWidth' => 1
+
+                ],
+
+                [
+
+                    'label' => 'Credits Required',
+
+                    'data' => $creditsRequired,
+
+                    'backgroundColor' => 'rgba(255, 99, 132, 0.5)',
+
+                    'borderColor' => 'rgb(255, 99, 132)',
+
+                    'borderWidth' => 1
+
+                ]
+
+            ]
+
+        ];
+    }
+
+    private function getGpaPerSemester()
+    {
+        $getGpa = $this->modelCourse
+            ->select('sum(courses.credits * student_grades.grade_value) / sum(courses.credits) as semester_gpa, enrollments.semester, students.id')
+            ->join('enrollments', 'enrollments.course_id = courses.id')
+            ->join('students', 'enrollments.student_id = students.id')
+            ->join('student_grades', 'enrollments.id = student_grades.enrollment_id')
+            ->where('students.user_id', user_id())
+            ->groupBy('enrollments.semester, students.id')
+            ->findAll();
+
+        //dd($getGpa);
+
+        $defaultGpaData = [
+            ['semester' => 1, 'semester_gpa' => 0],
+            ['semester' => 2, 'semester_gpa' => 0],
+            ['semester' => 3, 'semester_gpa' => 0],
+            ['semester' => 4, 'semester_gpa' => 0],
+            ['semester' => 5, 'semester_gpa' => 0],
+            ['semester' => 6, 'semester_gpa' => 0],
+            ['semester' => 7, 'semester_gpa' => 0],
+            ['semester' => 8, 'semester_gpa' => 0],
+        ];
+
+        foreach ($getGpa as $row) {
+            $defaultGpaData[$row->semester - 1]['semester_gpa'] = $row->semester_gpa;
+        }
+
+
+
+
+        foreach ($defaultGpaData as $row) {
+
+            $semesters[] = 'Semester ' . $row['semester'];
+
+            $gpaData[] = round($row['semester_gpa'], 2);
+        }
+
+        return [
+
+            'labels' => $semesters,
+
+            'datasets' => [
+
+                [
+
+                    'label' => 'GPA',
+
+                    'data' => $gpaData,
+
+                    'borderColor' => 'rgba(75, 192, 192, 1)',
+
+                    'tension' => 0.1,
+
+                    'fill' => false
+
+                ]
+
+            ]
+
+        ];
+    }
+
+    private function getCreditBySemester($semester, $array)
+    {
+        foreach ($array as $item) {
+            if ($item['semester'] === $semester) {
+                return $item['credits_required'];
+            }
+        }
+        return "Semester not found.";
     }
 }

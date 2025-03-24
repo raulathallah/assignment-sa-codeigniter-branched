@@ -13,6 +13,7 @@
 
     <title><?= $this->renderSection('title') ?></title>
     <script src="<?= base_url('assets/js/pristine.js') ?>"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <style>
         .custom-primary {

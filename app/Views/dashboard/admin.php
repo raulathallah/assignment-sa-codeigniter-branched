@@ -5,6 +5,11 @@ Dashboard
 
 <?= $this->section('content') ?>
 <div class="">
-  <h1>Admin Dashboard</h1>
+  Admin Dashboard
 </div>
+<?= $this->endSection() ?>
+
+
+<?= $this->section('scripts') ?>
+
 <?= $this->endSection() ?>

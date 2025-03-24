@@ -6,7 +6,7 @@ use CodeIgniter\Model;
 
 class StudentGradeModel extends Model
 {
-    protected $table            = 'studentgrades';
+    protected $table            = 'student_grades';
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = true;
     //protected $returnType       = 'array';

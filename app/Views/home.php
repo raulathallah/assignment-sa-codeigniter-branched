@@ -6,13 +6,6 @@ Home
 
 <?= $this->section('content') ?>
 
-<?php if (isset($errors)): ?>
-    <?php foreach ($errors as $error): ?>
-
-        <li style="color: red;"><?= esc($error) ?></li>
-
-    <?php endforeach ?>
-<?php endif; ?>
 <?php if (logged_in()): ?>
     <p>Welcome, <?= user()->username; ?>!</p>
 
