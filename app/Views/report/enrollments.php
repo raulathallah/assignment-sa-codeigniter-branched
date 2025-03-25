@@ -15,7 +15,7 @@ Enrollments Report
         <div class="card-body">
 
 
-            <form class="row" method="get" action="<?= site_url('report/enrollment') ?>">
+            <form class="row" method="get" action="<?= site_url('admin/reports/enrollments') ?>">
 
                 <div class="col-md-6">
 
@@ -29,7 +29,7 @@ Enrollments Report
 
                     <button type="submit" class="btn btn-primary me-2">Lihat Laporan</button>
 
-                    <a href="<?= site_url('report/enrollment') ?>" class="btn btn-secondary">Reset</a>
+                    <a href="<?= site_url('admin/reports/enrollments') ?>" class="btn btn-secondary">Reset</a>
 
                 </div>
 
@@ -66,17 +66,17 @@ Enrollments Report
 
                             <th>Nama</th>
 
-                            <th>Program Studi</th>
+                            <th>Study Program</th>
 
                             <th>Semester</th>
 
-                            <th>Kode MK</th>
+                            <th>Course Code</th>
 
-                            <th>Nama Mata Kuliah</th>
+                            <th>Course Name</th>
 
-                            <th>SKS</th>
+                            <th>Credits</th>
 
-                            <th>Tahun Akademik</th>
+                            <th>Academic Year</th>
 
                             <th>Status</th>
 
@@ -108,7 +108,7 @@ Enrollments Report
 
                                     <td><?= $enrollment->study_program ?></td>
 
-                                    <td><?= $enrollment->current_semester ?></td>
+                                    <td><?= $enrollment->semester ?></td>
 
                                     <td><?= $enrollment->course_code ?></td>
 
@@ -116,8 +116,7 @@ Enrollments Report
 
                                     <td><?= $enrollment->credits ?></td>
 
-                                    <td><?= $enrollment->academic_year . ' - ' .
-                                            $enrollment->enrollment_semester ?></td>
+                                    <td><?= $enrollment->academic_year ?></td>
 
                                     <td><?= $enrollment->status ?></td>
 

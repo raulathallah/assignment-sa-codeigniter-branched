@@ -64,25 +64,7 @@ class Enrollment extends BaseController
 
     private function filterData($student_id = '', $name = '')
     {
-        $result = $this->modelEnrollment
-            ->select(
-                'students.name, 
-                courses.code as course_code,
-                courses.name as course_name, 
-                enrollments.semester, 
-                enrollments.academic_year, 
-                courses.credits, 
-                students.student_id,
-                students.study_program'
-            )
-            ->join('courses', 'courses.id = enrollments.course_id')
-            ->join('students', 'students.id = enrollments.student_id');
-
-
-        if (isset($student_id) || isset($name)) {
-            $result->where('students.student_id', $student_id)->orWhere('students.name', $name);
-        }
-        return $result->findAll();
+        return $this->modelEnrollment->getEnrollmentReportData($student_id, $name);
     }
 
     public function enrollmentForm()
@@ -97,7 +79,7 @@ class Enrollment extends BaseController
 
         $data = [
 
-            'title' => 'Laporan Enrollment Mata Kuliah',
+            'title' => 'Enrollment Report',
 
             'enrollments' => $filteredData,
 
@@ -117,11 +99,8 @@ class Enrollment extends BaseController
     public function enrollmentExcel()
     {
         $student_id = $this->request->getVar('student_id');
-        //$student_id = '2301893244';
         $name = $this->request->getVar('name');
 
-        dd($this->request->getVar());
-        //$enrollments = $this->filterData($student_id, $name);
         $enrollments = $this->filterData($student_id, $name);
 
         $spreadsheet = new Spreadsheet();

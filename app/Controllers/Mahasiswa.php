@@ -309,16 +309,12 @@ class Mahasiswa extends BaseController
     }
 
     public function studentsbyprogramForm()
-
     {
-
-        $study_programs = ['Teknik Informatika', 'Sistem Informasi', 'Teknik Komputer'];
-
-        $entry_years = ['2021', '2022', '2023', '2024'];
-
+        $study_programs = $this->modelStudent->getAllStudyProgram();
+        $entry_years = $this->modelStudent->getAllEntryYear();
         $data = [
 
-            'title' => 'Laporan Mahasiswa Per Program Studi',
+            'title' => 'Student Report by Student Program',
 
             'study_programs' => $study_programs,
 
@@ -326,30 +322,25 @@ class Mahasiswa extends BaseController
 
         ];
 
-        return view('reports/studentsbyprogram', $data);
+        return view('report/students', $data);
+    }
+
+    private function filterData($studyProgram = '', $entryYear = '')
+    {
+        return $this->modelStudent->getStudentByProgramData($studyProgram, $entryYear);
     }
 
     public function studentsbyprogramPdf()
     {
-
         $studyProgram = $this->request->getVar('study_program');
-
         $entryYear = $this->request->getVar('entry_year');
-
-        $result = $this->modelStudent->where('study_program', $studyProgram)->where('entry_year', $entryYear)->findAll();
-
+        $result = $this->filterData($studyProgram, $entryYear);
         // Generate PDF
-
         $pdf = $this->initTcpdf();
-
         $this->generatePdfHtmlContent($pdf, $result, $studyProgram, $entryYear);
-
         // Output PDF
-
         $filename = 'laporan_mahasiswa_' . date('Y-m-d') . '.pdf';
-
         $pdf->Output($filename, 'I');
-
         exit;
     }
 
@@ -363,11 +354,11 @@ class Mahasiswa extends BaseController
 
         $pdf->SetAuthor('Administrator');
 
-        $pdf->SetTitle('Laporan Mahasiswa');
+        $pdf->SetTitle('Student Data Report');
 
-        $pdf->SetSubject('Laporan Data Mahasiswa');
+        $pdf->SetSubject('Student Data Report');
 
-        $pdf->SetHeaderData('', 0, 'UNIVERSITAS XYZ', '', [0, 0, 0], [0, 64, 128]);
+        $pdf->SetHeaderData('logo.png', 20, 'UNIVERSITAS XYZ', '', [0, 0, 0], [0, 64, 128]);
 
         $pdf->setFooterData([0, 64, 0], [0, 64, 128]);
 

@@ -90,4 +90,31 @@ class EnrollmentModel extends Model
         ];
         return $result;
     }
+
+
+    public function getEnrollmentReportData($student_id = '', $name = '')
+    {
+        $result = $this->select(
+            'students.name, 
+            courses.code as course_code,
+            courses.name as course_name, 
+            enrollments.semester, 
+            enrollments.academic_year, 
+            courses.credits, 
+            students.student_id,
+            students.study_program,
+            enrollments.status'
+        )
+            ->join('courses', 'courses.id = enrollments.course_id')
+            ->join('students', 'students.id = enrollments.student_id');
+        if (isset($student_id)) {
+            $result->like('LOWER(students.student_id)', strtolower($student_id));
+        }
+
+        if (isset($name)) {
+            $result->like('LOWER(students.name)', strtolower($name));
+        }
+
+        return $result->findAll();
+    }
 }

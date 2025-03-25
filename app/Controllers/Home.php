@@ -299,6 +299,8 @@ class Home extends BaseController
             array_push($gradeCredits, ['grade_letter' => $row->grade_letter, 'credits' => $row->credits]);
         }
 
+
+
         // $dummyGradeCredits = [
         //     ['grade_letter' => 'A', 'credits' => 45],
         //     ['grade_letter' => 'B+', 'credits' => 20],
@@ -317,6 +319,10 @@ class Home extends BaseController
             'D' => 'rgb(255, 99, 132)' // Merah untuk D
         ];
 
+        $gradeLabels = [];
+        $creditCounts = [];
+        $colors = [];
+
         foreach ($gradeCredits as $row) {
 
             $gradeLabels[] = $row['grade_letter'] . ' = ' . $row['credits'] . ' Credits';
@@ -325,6 +331,7 @@ class Home extends BaseController
 
             $colors[] = $backgroundColors[$row['grade_letter']];
         }
+
 
         return [
 

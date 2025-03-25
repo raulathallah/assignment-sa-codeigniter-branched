@@ -147,4 +147,9 @@ class StudentModel extends Model
         $entry_year = $this->select('entry_year')->distinct()->findAll();
         return array_column($entry_year, 'entry_year');
     }
+
+    public function getStudentByProgramData($studyProgram = '', $entryYear = '')
+    {
+        return $this->where('study_program', $studyProgram)->where('entry_year', $entryYear)->findAll();
+    }
 }

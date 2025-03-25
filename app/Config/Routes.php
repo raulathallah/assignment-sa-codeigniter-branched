@@ -54,9 +54,11 @@ $routes->group('admin/enrollments', ['filter' => 'role:admin'], function ($route
 //reporting
 $routes->group('admin/reports', ['filter' => 'role:admin'], function ($routes) {
     $routes->get('enrollments', [Enrollment::class, 'enrollmentForm']);
+    $routes->get('students', [Mahasiswa::class, 'studentsbyprogramForm']);
 });
 $routes->get('report/enrollmentExcel', [Enrollment::class, 'enrollmentExcel']);
 $routes->post('report/studentsbyprogram', [Mahasiswa::class, 'studentsbyprogramPdf']);
+
 
 $routes->group('admin/users', ['filter' => 'role:admin'], function ($routes) {
     $routes->get('/', 'Users::index');
