@@ -96,7 +96,7 @@ class StudentModel extends Model
     {
         if (!empty($params->search)) { // Apply search
             $this->groupStart()
-                ->like('code', $params->search, 'both', null, true)
+                ->like('student_id', $params->search, 'both', null, true)
                 ->orLike('name', $params->search, 'both', null, true)
                 ->groupEnd();
         }

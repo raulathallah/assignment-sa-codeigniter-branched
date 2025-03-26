@@ -19,9 +19,9 @@ Enrollments Report
 
                 <div class="col-md-6">
 
-                    <input type="text" class="form-control" id="name" name="name"
+                    <input type="text" class="form-control" id="params" name="params"
 
-                        placeholder="Masukkan NIM atau Nama" value="<?= $filters['name'] ?? '' ?>">
+                        placeholder="Masukkan NIM atau Nama" value="<?= $params ?? '' ?>">
 
                 </div>
 
@@ -36,8 +36,7 @@ Enrollments Report
             </form>
             <div class="d-flex justify-content-end mb-3">
 
-                <a href="<?= site_url('report/enrollmentExcel') . (!empty($filters['student_id']) ||
-                                !empty($filters['name']) ? '?' . http_build_query($filters) : '') ?>" class="btn btn-success">
+                <a href="<?= site_url('report/enrollmentExcel') . (!empty($params) ? '?params=' . $params : '') ?>" class="btn btn-success">
 
                     <i class="bi bi-file-excel me-1"></i> Export Excel
 

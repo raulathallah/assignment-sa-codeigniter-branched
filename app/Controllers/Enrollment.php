@@ -62,20 +62,17 @@ class Enrollment extends BaseController
         return view('enrollments/v_enrollments', $data);
     }
 
-    private function filterData($student_id = '', $name = '')
+    private function filterData($params = '')
     {
-        return $this->modelEnrollment->getEnrollmentReportData($student_id, $name);
+        return $this->modelEnrollment->getEnrollmentReportData($params);
     }
 
     public function enrollmentForm()
-
     {
 
-        $student_id = $this->request->getVar('student_id');
+        $params = $this->request->getVar('params');
 
-        $name = $this->request->getVar('name');
-
-        $filteredData = $this->filterData($student_id, $name);
+        $filteredData = $this->filterData($params);
 
         $data = [
 
@@ -83,13 +80,7 @@ class Enrollment extends BaseController
 
             'enrollments' => $filteredData,
 
-            'filters' => [
-
-                'student_id' => $student_id,
-
-                'name' => $name
-
-            ]
+            'params' => $params
 
         ];
 
@@ -98,10 +89,9 @@ class Enrollment extends BaseController
 
     public function enrollmentExcel()
     {
-        $student_id = $this->request->getVar('student_id');
-        $name = $this->request->getVar('name');
+        $params = $this->request->getVar('params');
 
-        $enrollments = $this->filterData($student_id, $name);
+        $enrollments = $this->filterData($params);
 
         $spreadsheet = new Spreadsheet();
 

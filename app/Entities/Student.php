@@ -23,6 +23,7 @@ class Student extends Entity
         'id'                => 'integer',
         'current_semester'  => 'integer',
         'entry_year'        => 'integer',
+        'student_id'        => 'string'
     ];
 
     protected $dates   = [
