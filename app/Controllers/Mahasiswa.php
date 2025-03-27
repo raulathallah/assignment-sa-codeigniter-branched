@@ -349,7 +349,7 @@ class Mahasiswa extends BaseController
     {
 
         //$image_file = base_url('images/logo.png');
-        $image_file = K_PATH_IMAGES . 'images/logo.png';
+        $image_file = 'logo.png';
         $pdf = new TCPDF('L', 'mm', 'A4', true, 'UTF-8', false);
 
         $pdf->SetCreator('CodeIgniter 4');
@@ -360,7 +360,7 @@ class Mahasiswa extends BaseController
 
         $pdf->SetSubject('Student Data Report');
 
-        $pdf->SetHeaderData($image_file, 20, 'UNIVERSITAS XYZ', '', [0, 0, 0], [0, 64, 128]);
+        $pdf->SetHeaderData($image_file, 10, 'UNIVERSITAS XYZ', '', [0, 0, 0], [0, 64, 128]);
 
         $pdf->setFooterData([0, 64, 0], [0, 64, 128]);
 

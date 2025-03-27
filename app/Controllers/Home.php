@@ -299,17 +299,6 @@ class Home extends BaseController
             array_push($gradeCredits, ['grade_letter' => $row->grade_letter, 'credits' => $row->credits]);
         }
 
-
-
-        // $dummyGradeCredits = [
-        //     ['grade_letter' => 'A', 'credits' => 45],
-        //     ['grade_letter' => 'B+', 'credits' => 20],
-        //     ['grade_letter' => 'B', 'credits' => 32],
-        //     ['grade_letter' => 'C', 'credits' => 8],
-        //     ['grade_letter' => 'C', 'credits' => 18],
-        //     ['grade_letter' => 'D', 'credits' => 6]
-        // ];
-
         $backgroundColors = [
             'A' => 'rgb(54, 162, 235)', // Biru untuk A
             'B+' => 'rgb(75, 192, 192)', // Cyan untuk B+
@@ -465,9 +454,6 @@ class Home extends BaseController
         foreach ($getGpa as $row) {
             $defaultGpaData[$row->semester - 1]['semester_gpa'] = $row->semester_gpa;
         }
-
-
-
 
         foreach ($defaultGpaData as $row) {
 
